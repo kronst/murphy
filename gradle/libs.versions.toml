@@ -1,0 +1,11 @@
+[versions]
+kotlin = "2.2.21"
+junit = "5.10.2"
+
+[libraries]
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+[bundles]
+plugins = ["plugin-kotlin-gradle"]
+bom = ["junit-bom"]

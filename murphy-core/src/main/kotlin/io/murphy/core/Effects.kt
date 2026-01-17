@@ -1,7 +1,10 @@
 package io.murphy.core
 
+import io.murphy.core.effect.DelayEffect
 import io.murphy.core.effect.JitterEffect
 import io.murphy.core.effect.LatencyEffect
+import io.murphy.core.effect.ProbabilisticDelayEffect
+import io.murphy.core.effect.ProbabilisticEffect
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -65,6 +68,16 @@ object Effects {
     fun crash(exception: Exception): Effect {
         return Effect {
             throw exception
+        }
+    }
+
+    @JvmStatic
+    fun Effect.withProbability(probability: Double): Effect {
+        val chance = probability.coerceIn(0.0, 1.0)
+
+        return when (this) {
+            is DelayEffect -> ProbabilisticDelayEffect(delegate = this, probability = chance)
+            else -> ProbabilisticEffect(delegate = this, probability = chance)
         }
     }
 }

@@ -1,11 +1,15 @@
 package io.murphy.core
 
+import io.murphy.core.Effects.withProbability
+import io.murphy.core.effect.ProbabilisticDelayEffect
+import io.murphy.core.effect.ProbabilisticEffect
 import io.murphy.testhelper.MurphyMocks.ctx
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -176,5 +180,63 @@ class EffectsTest {
         assertEquals(200, response.code)
         assertEquals(0, response.body.size)
         assertTrue(response.headers.isEmpty())
+    }
+
+    @Test
+    fun `default probability is 1_0`() {
+        assertEquals(1.0, Effects.status(200).probability())
+    }
+
+    @Test
+    fun `withProbability 1_0 always applies effect`() {
+        val effect = Effects.status(200).withProbability(1.0)
+
+        val response = effect.apply(ctx())
+
+        assertNotNull(response)
+        assertEquals(200, response.code)
+        assertEquals(1.0, effect.probability())
+    }
+
+    @Test
+    fun `withProbability 0_0 never applies effect`() {
+        val effect = Effects.status(200).withProbability(0.0)
+
+        val response = effect.apply(ctx())
+
+        assertNull(response)
+        assertEquals(0.0, effect.probability())
+    }
+
+    @Test
+    fun `withProbability coerces values to 0_0-1_0 range`() {
+        assertEquals(0.0, Effects.status(200).withProbability(-0.1).probability())
+        assertEquals(1.0, Effects.status(200).withProbability(1.1).probability())
+    }
+
+    @Test
+    fun `withProbability returns probabilistic effects`() {
+        assertIs<ProbabilisticEffect>(Effects.status(200).withProbability(0.75))
+        assertIs<ProbabilisticEffect>(Effects.json(body = "{}").withProbability(0.25))
+        assertIs<ProbabilisticEffect>(Effects.crash("Error").withProbability(0.9))
+        assertIs<ProbabilisticEffect>(Effects.response().withProbability(0.1))
+    }
+
+    @Test
+    fun `withProbability returns probabilistic delayed effects for latency`() {
+        val effect = Effects.latency(100).withProbability(1.0)
+
+        assertIs<ProbabilisticDelayEffect>(effect)
+        assertEquals(1.0, effect.probability())
+        assertEquals(100, effect.duration)
+    }
+
+    @Test
+    fun `withProbability returns probabilistic delayed effects for jitter`() {
+        val effect = Effects.jitter(10, 20).withProbability(0.5)
+
+        assertIs<ProbabilisticDelayEffect>(effect)
+        assertEquals(0.5, effect.probability())
+        assertTrue(effect.duration in 10..20)
     }
 }

@@ -1,31 +1,22 @@
 package io.murphy.core
 
+import io.murphy.core.effect.JitterEffect
+import io.murphy.core.effect.LatencyEffect
 import java.io.IOException
-import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
 
 object Effects {
 
     @JvmStatic
     @JvmOverloads
-    fun latency(value: Long, unit: TimeUnit = TimeUnit.MILLISECONDS): Effect {
-        return Effect {
-            Thread.sleep(unit.toMillis(value))
-            null
-        }
+    fun latency(duration: Long, unit: TimeUnit = TimeUnit.MILLISECONDS): Effect {
+        return LatencyEffect(duration = unit.toMillis(duration))
     }
 
     @JvmStatic
     @JvmOverloads
     fun jitter(min: Long, max: Long, unit: TimeUnit = TimeUnit.MILLISECONDS): Effect {
-        val minMillis = unit.toMillis(min)
-        val maxMillis = unit.toMillis(max)
-
-        return Effect {
-            val delay = ThreadLocalRandom.current().nextLong(minMillis, maxMillis + 1)
-            Thread.sleep(delay)
-            null
-        }
+        return JitterEffect(min = unit.toMillis(min), max = unit.toMillis(max))
     }
 
     @JvmStatic
@@ -48,7 +39,8 @@ object Effects {
     }
 
     @JvmStatic
-    fun json(code: Int, body: String): Effect {
+    @JvmOverloads
+    fun json(code: Int = 200, body: String): Effect {
         return Effect {
             MurphyResponse(
                 code = code,
@@ -56,11 +48,6 @@ object Effects {
                 headers = mapOf("Content-Type" to listOf("application/json")),
             )
         }
-    }
-
-    @JvmStatic
-    fun json(body: String): Effect {
-        return json(code = 200, body = body)
     }
 
     @JvmStatic

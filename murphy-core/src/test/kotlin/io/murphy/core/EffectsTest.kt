@@ -141,4 +141,40 @@ class EffectsTest {
         assertTrue(response.headers.containsKey("X-Custom-Header"))
         assertEquals(listOf("Custom1", "Custom2"), response.headers["X-Custom-Header"])
     }
+
+    @Test
+    fun `response effect returns empty headers by default`() {
+        val effect = Effects.response(code = 200, body = "OK".toByteArray())
+
+        val response = effect.apply(ctx())
+
+        assertNotNull(response)
+        assertEquals(200, response.code)
+        assertEquals("OK", response.body.decodeToString())
+        assertTrue(response.headers.isEmpty())
+    }
+
+    @Test
+    fun `response effect returns empty body by default`() {
+        val effect = Effects.response(code = 204)
+
+        val response = effect.apply(ctx())
+
+        assertNotNull(response)
+        assertEquals(204, response.code)
+        assertEquals(0, response.body.size)
+        assertTrue(response.headers.isEmpty())
+    }
+
+    @Test
+    fun `response effect returns success response by default`() {
+        val effect = Effects.response()
+
+        val response = effect.apply(ctx())
+
+        assertNotNull(response)
+        assertEquals(200, response.code)
+        assertEquals(0, response.body.size)
+        assertTrue(response.headers.isEmpty())
+    }
 }

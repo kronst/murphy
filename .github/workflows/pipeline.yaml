@@ -1,0 +1,54 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linting:
+    name: Lint Code
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install ktlint
+        shell: bash
+        run: |
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.3.0/ktlint
+          chmod a+x ktlint
+          ./ktlint "**/*.kt"
+
+  test:
+    needs:
+      - linting
+    name: Run Unit Tests
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Gradle Build
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.2.1'
+          cache-disabled: false
+
+      - name: Run Tests
+        run: ./gradlew test -PskipReports

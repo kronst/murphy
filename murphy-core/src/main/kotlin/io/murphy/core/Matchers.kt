@@ -17,8 +17,8 @@ object Matchers {
 
     @JvmStatic
     @JvmOverloads
-    fun header(keyPattern: String, valuePattern: String? = null): Matcher {
-        return HeaderMatcher(keyPattern = keyPattern, valuePattern = valuePattern)
+    fun header(namePattern: String, valuePattern: String? = null): Matcher {
+        return HeaderMatcher(namePattern = namePattern, valuePattern = valuePattern)
     }
 
     @JvmStatic

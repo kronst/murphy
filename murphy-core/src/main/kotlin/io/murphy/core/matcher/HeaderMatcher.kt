@@ -5,15 +5,15 @@ import io.murphy.core.MurphyContext
 import io.murphy.core.internal.GlobCompiler
 
 class HeaderMatcher(
-    private val keyPattern: String,
+    private val namePattern: String,
     private val valuePattern: String? = null,
 ) : Matcher {
-    private val keyRegex = GlobCompiler.compile(pattern = keyPattern, isPath = false)
+    private val nameRegex = GlobCompiler.compile(pattern = namePattern, isPath = false)
     private val valueRegex = valuePattern?.let { GlobCompiler.compile(pattern = it, isPath = false) }
 
     override fun matches(context: MurphyContext): Boolean {
-        return context.headers.any { (key, values) ->
-            if (!keyRegex.matcher(key).matches()) {
+        return context.headers.any { (name, values) ->
+            if (!nameRegex.matcher(name).matches()) {
                 return@any false
             }
 
@@ -27,9 +27,9 @@ class HeaderMatcher(
 
     override fun toString(): String {
         return if (valuePattern != null) {
-            "Header '$keyPattern' matches value '$valuePattern'"
+            "Header '$namePattern' matches value '$valuePattern'"
         } else {
-            "Header '$keyPattern' exists"
+            "Header '$namePattern' exists"
         }
     }
 }

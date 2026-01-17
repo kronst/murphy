@@ -37,7 +37,7 @@ class MurphyRuleTest {
     }
 
     @Test
-    fun `builder creates rule with multiple causes`() {
+    fun `builder creates rule with list causes`() {
         val rule = MurphyRule.builder()
             .matches(Matchers.method("POST"))
             .causes(
@@ -45,6 +45,19 @@ class MurphyRuleTest {
                     Effects.latency(500),
                     Effects.status(201),
                 )
+            )
+            .build()
+
+        assertEquals(2, rule.effects.size)
+    }
+
+    @Test
+    fun `builder creates rule with vararg causes`() {
+        val rule = MurphyRule.builder()
+            .matches(Matchers.method("GET"))
+            .causes(
+                Effects.latency(200),
+                Effects.status(200),
             )
             .build()
 

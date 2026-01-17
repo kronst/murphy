@@ -26,6 +26,10 @@ class MurphyRule private constructor(
             this.effects += effects
         }
 
+        fun causes(vararg effects: Effect) = apply {
+            this.effects += effects
+        }
+
         fun build(): MurphyRule {
             if (effects.isEmpty()) {
                 throw IllegalStateException("Rule must have at least one effect")

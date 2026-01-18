@@ -4,8 +4,6 @@
 
 Named after *Murphy's Law*, this library helps you ensure that if anything *can* go wrong with your downstream services, your application is prepared to handle it.
 
-
-
 ## ✨ Features
 
 * **Zero-dependency Core**: The heart of Murphy is pure Kotlin with no external dependencies.
@@ -56,6 +54,15 @@ val client = OkHttpClient.Builder()
     .build()
 ```
 
+#### Spring RestClient
+> [!NOTE]
+> Spring `RestTemplate` is not supported because it is [deprecated](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-resttemplate) in favor of `RestClient`.
+```kotlin
+val client = RestClient.builder()
+    .requestInterceptor(MurphyRestClientInterceptor(scenario))
+    .build()
+```
+
 ## 🛠 Available Effects
 - `latency(ms)`: Adds a fixed delay.
 - `jitter(min, max)`: Adds a random delay within a specified range.
@@ -72,7 +79,7 @@ If you want to write a custom interceptor or extend Murphy's logic, here are the
 * **`MurphyResponse`**: A value object representing the desired chaos response (status code, headers, and body).
 * **`Matcher`**: A functional interface `(MurphyContext) -> Boolean`. Use it to define when a rule should be triggered.
 * **`Effect`**: The heart of failure injection. It takes a `MurphyContext` and can either:
-    * Return `null`: Perform a side-effect (like delay) and continue to the next effect.
+    * Return `null`: Perform a side effect (like delay) and continue to the next effect.
     * Return `MurphyResponse`: Intercept the call and return this response immediately.
     * Throw an `Exception`: Simulate a low-level network crash.
 * **`MurphyRule`**: Combines a `Matcher` with a list of `Effect`s.
@@ -93,7 +100,6 @@ val loggerEffect = Effect { context ->
 
 ## 🗺 Roadmap
 - [x] OkHttp Interceptor
-- [ ] Spring RestTemplate Interceptor
-- [ ] Spring RestClient Interceptor
-- [ ] Ktor Client Plugin
+- [x] Spring RestClient Interceptor
 - [ ] Spring WebClient Filter
+- [ ] Ktor Client Plugin

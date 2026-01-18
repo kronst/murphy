@@ -10,10 +10,8 @@ repositories {
 }
 
 dependencies {
-    libs.findBundle("bom").get().get().forEach { lib ->
-        implementation(platform(lib))
-        testFixturesImplementation(platform(lib))
-    }
+    implementation(platform(libs.findLibrary("junit-bom").get()))
+    testFixturesImplementation(platform(libs.findLibrary("junit-bom").get()))
 
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter")

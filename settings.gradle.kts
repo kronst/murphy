@@ -6,3 +6,4 @@ rootProject.name = "murphy"
 
 include("murphy-core")
 include("murphy-okhttp")
+include("murphy-spring")

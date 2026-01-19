@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    `java-test-fixtures`
 }
 
 val libs: VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -10,10 +9,8 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(libs.findLibrary("junit-bom").get()))
-    testFixturesImplementation(platform(libs.findLibrary("junit-bom").get()))
-
     testImplementation(kotlin("test"))
+    testImplementation(platform(libs.findLibrary("junit-bom").get()))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 

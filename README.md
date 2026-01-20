@@ -70,6 +70,13 @@ val client = WebClient.builder()
     .build()
 ```
 
+#### Ktor Client
+```kotlin
+val client = HttpClient(CIO) {
+    install(MurphyPlugin) { this.scenario = scenario }
+}
+```
+
 ## 🛠 Available Effects
 - `latency(ms)`: Adds a fixed delay.
 - `jitter(min, max)`: Adds a random delay within a specified range.
@@ -109,4 +116,4 @@ val loggerEffect = Effect { context ->
 - [x] OkHttp Interceptor
 - [x] Spring RestClient Interceptor
 - [x] Spring WebClient Filter
-- [ ] Ktor Client Plugin
+- [x] Ktor Client Plugin

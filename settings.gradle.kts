@@ -5,5 +5,6 @@ plugins {
 rootProject.name = "murphy"
 
 include("murphy-core")
+include("murphy-ktor")
 include("murphy-okhttp")
 include("murphy-spring")

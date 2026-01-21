@@ -77,6 +77,12 @@ val client = HttpClient(CIO) {
 }
 ```
 
+#### Java HttpClient
+
+```java
+var client = MurphyHttpClient.decorate(HttpClient.newHttpClient(), scenario);
+```
+
 ## 🛠 Available Effects
 - `latency(ms)`: Adds a fixed delay.
 - `jitter(min, max)`: Adds a random delay within a specified range.
@@ -117,3 +123,4 @@ val loggerEffect = Effect { context ->
 - [x] Spring RestClient Interceptor
 - [x] Spring WebClient Filter
 - [x] Ktor Client Plugin
+- [x] Java HttpClient Decorator

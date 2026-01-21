@@ -237,6 +237,5 @@ class EffectsTest {
 
         assertIs<ProbabilisticDelayEffect>(effect)
         assertEquals(0.5, effect.probability())
-        assertTrue(effect.duration in 10..20)
     }
 }

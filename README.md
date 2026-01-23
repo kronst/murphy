@@ -1,18 +1,21 @@
-# 🕵️‍♂️ Murphy
+# Murphy
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.kronst/murphy-core.svg)](https://central.sonatype.com/artifact/io.github.kronst/murphy-core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Murphy** is a lightweight chaos engineering library for the JVM (Kotlin & Java) designed to simulate network failures, latency, and erratic API behavior in your HTTP clients.
 
 Named after *Murphy's Law*, this library helps you ensure that if anything *can* go wrong with your downstream services, your application is prepared to handle it.
 
-## ✨ Features
+## Features
 
-* **Zero-dependency Core**: The heart of Murphy is pure Kotlin with no external dependencies.
-* **First Match Wins**: Define a scenario with multiple rules; Murphy applies the first matching one.
-* **Probability-based Chaos**: Inject failures only in a percentage of requests (e.g., "fail only 5% of the time").
-* **Kotlin & Java Friendly**: Idiomatic DSL for Kotlin and clean Builders for Java.
-* **Extensible**: Modular architecture to support any HTTP client (OkHttp, Ktor, Spring, etc.).
+- **Zero-dependency Core**: The heart of Murphy is pure Kotlin with no external dependencies.
+- **First Match Wins**: Define a scenario with multiple rules; Murphy applies the first matching one.
+- **Probability-based Chaos**: Inject failures only in a percentage of requests (e.g., "fail only 5% of the time").
+- **Kotlin & Java Friendly**: Idiomatic DSL for Kotlin and clean Builders for Java.
+- **Extensible**: Modular architecture to support any HTTP client (OkHttp, Ktor, Spring, etc.).
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Define your Scenario
 
@@ -83,7 +86,7 @@ val client = HttpClient(CIO) {
 var client = MurphyHttpClient.decorate(HttpClient.newHttpClient(), scenario);
 ```
 
-## 🛠 Available Effects
+## Available Effects
 - `latency(ms)`: Adds a fixed delay.
 - `jitter(min, max)`: Adds a random delay within a specified range.
 - `status(code)`: Returns an empty response with the specified HTTP status code.
@@ -91,21 +94,19 @@ var client = MurphyHttpClient.decorate(HttpClient.newHttpClient(), scenario);
 - `crash()`: Throws an `IOException` to simulate a sudden network drop.
 - `withProbability(0.0..1.0)`: Decorates any effect to trigger it randomly.
 
-## 🧩 Architecture & Extensibility
+## Architecture & Extensibility
 
 If you want to write a custom interceptor or extend Murphy's logic, here are the core components:
 
-* **`MurphyContext`**: A simple data class representing an outgoing request (URL, path, method, and headers).
-* **`MurphyResponse`**: A value object representing the desired chaos response (status code, headers, and body).
-* **`Matcher`**: A functional interface `(MurphyContext) -> Boolean`. Use it to define when a rule should be triggered.
-* **`Effect`**: The heart of failure injection. It takes a `MurphyContext` and can either:
-    * Return `null`: Perform a side effect (like delay) and continue to the next effect.
-    * Return `MurphyResponse`: Intercept the call and return this response immediately.
-    * Throw an `Exception`: Simulate a low-level network crash.
-* **`MurphyRule`**: Combines a `Matcher` with a list of `Effect`s.
-* **`MurphyScenario`**: A collection of rules that uses the **First Match Wins** strategy to pick the appropriate rule for a request.
-
-
+- **`MurphyContext`**: A simple data class representing an outgoing request (URL, path, method, and headers).
+- **`MurphyResponse`**: A value object representing the desired chaos response (status code, headers, and body).
+- **`Matcher`**: A functional interface `(MurphyContext) -> Boolean`. Use it to define when a rule should be triggered.
+- **`Effect`**: The heart of failure injection. It takes a `MurphyContext` and can either:
+    - Return `null`: Perform a side effect (like delay) and continue to the next effect.
+    - Return `MurphyResponse`: Intercept the call and return this response immediately.
+    - Throw an `Exception`: Simulate a low-level network crash.
+- **`MurphyRule`**: Combines a `Matcher` with a list of `Effect`s.
+- **`MurphyScenario`**: A collection of rules that uses the **First Match Wins** strategy to pick the appropriate rule for a request.
 
 ### Custom Effects Example
 
@@ -117,10 +118,3 @@ val loggerEffect = Effect { context ->
     null // Continue to next effects
 }
 ```
-
-## 🗺 Roadmap
-- [x] OkHttp Interceptor
-- [x] Spring RestClient Interceptor
-- [x] Spring WebClient Filter
-- [x] Ktor Client Plugin
-- [x] Java HttpClient Decorator

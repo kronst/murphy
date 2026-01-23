@@ -37,7 +37,7 @@ publishing {
 
             pom {
                 name.set(project.name)
-                description.set("Chaos Engineering library for JVM - ${project.name}")
+                description.set("Lightweight chaos engineering library for JVM to simulate network failures and latency in HTTP clients - ${project.name}")
                 url.set("https://github.com/kronst/murphy")
 
                 licenses {

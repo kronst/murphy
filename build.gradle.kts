@@ -10,7 +10,7 @@ jreleaser {
     project {
         copyright.set("Roman Konstantynovskyi")
         name.set("murphy")
-        description.set("Chaos Engineering library for JVM")
+        description.set("Lightweight chaos engineering library for JVM to simulate network failures and latency in HTTP clients.")
 
         links {
             homepage.set("https://github.com/kronst/murphy")

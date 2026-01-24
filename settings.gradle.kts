@@ -4,6 +4,7 @@ plugins {
 
 rootProject.name = "murphy"
 
+include("murphy-bom")
 include("murphy-core")
 include("murphy-http")
 include("murphy-ktor")

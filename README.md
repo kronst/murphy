@@ -17,6 +17,54 @@ Named after *Murphy's Law*, this library helps you ensure that if anything *can*
 
 ## Getting Started
 
+### Optional: Use the Murphy BOM (Recommended for Multiple Modules)
+
+If you use more than one Murphy module, import the BOM to keep versions aligned.
+
+#### Gradle (Kotlin DSL)
+```kotlin
+dependencies {
+    implementation(platform("io.github.kronst:murphy-bom:VERSION"))
+    implementation("io.github.kronst:murphy-core")
+    implementation("io.github.kronst:murphy-okhttp")
+}
+```
+
+#### Gradle (Groovy)
+```groovy
+dependencies {
+    implementation platform("io.github.kronst:murphy-bom:VERSION")
+    implementation "io.github.kronst:murphy-core"
+    implementation "io.github.kronst:murphy-okhttp"
+}
+```
+
+#### Maven
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>io.github.kronst</groupId>
+      <artifactId>murphy-bom</artifactId>
+      <version>VERSION</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<dependencies>
+  <dependency>
+    <groupId>io.github.kronst</groupId>
+    <artifactId>murphy-core</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>io.github.kronst</groupId>
+    <artifactId>murphy-okhttp</artifactId>
+  </dependency>
+</dependencies>
+```
+
 ### 1. Define your Scenario
 
 A **Scenario** is a collection of rules that describe what should go wrong and when.
